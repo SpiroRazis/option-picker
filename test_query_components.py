@@ -1,5 +1,5 @@
 import unittest
-from query_components import OptionList, OptionData, OptionKey, TextData
+from query_components import OptionList, OptionData, OptionKey, OptionValue
 
 """
 CONDUCTS A SERIES OF SIMPLE TESTS
@@ -22,12 +22,12 @@ assert not (OptionKey("key1234") == OptionKey("key4321"))
 
 
 # GET TEXT TEST
-assert str(TextData("test text")) == "test text"
-assert TextData("test text").getData() == "test text"
-assert TextData("x123") == TextData("x123")
-assert not (TextData("x123") == TextData("123x"))
+assert str(OptionValue("test text")) == "test text"
+assert OptionValue("test text").getData() == "test text"
+assert OptionValue("x123") == OptionValue("x123")
+assert not (OptionValue("x123") == OptionValue("123x"))
 
-test_text = testcase_obj.assertRaises(ValueError, TextData, "")
+test_text = testcase_obj.assertRaises(ValueError, OptionValue, "")
 
 # OPTIONS    test_options = testcase_obj.assertRaises(ValueError, Option, "key test", "text")
 test_options = testcase_obj.assertRaises(ValueError, OptionData, "key_test", "text")

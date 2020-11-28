@@ -1,6 +1,6 @@
 import unittest
 from query import Query
-from query_components import OptionList, OptionData, SelectorData, TextData
+from query_components import OptionList, OptionData, OptionKey, OptionValue
 
 print(dir(OptionList))
 

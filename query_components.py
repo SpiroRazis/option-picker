@@ -26,12 +26,12 @@ class OptionList(DataContainer):
 
     def isValidContent(self, content):
         if isinstance(content, OptionData):
-            check_key_object, check_text_obj = content.getData()
+            check_key_object, check_value_object = content.getData()
             for option in self._options:
                 if (check_key_object == option.getOptionKey()):
                     raise ValueError("Pre-Existing Key: %s" % str(check_key_object))
-                elif (check_text_obj == option.getTextData()):
-                    raise ValueError("Pre-Existing Text: %s" % str(check_text_obj))
+                elif (check_value_object == option.getOptionValue()):
+                    raise ValueError("Pre-Existing Text: %s" % str(check_value_object))
             return True
         else:
             raise TypeError("Not an Option!")
@@ -68,29 +68,29 @@ class OptionList(DataContainer):
             return self._containsHelperOptionData(object)
         elif isinstance(object, OptionKey):
             return self._containsHelperOptionKey(object)
-        elif isinstance(object, TextData):
-            return self._containsHelperTextData(object)
+        elif isinstance(object, OptionValue):
+            return self._containsHelperOptionValue(object)
         return False
 
     def _containsHelperOptionData(self, check_option):
-        check_key_object, check_text_data_obj = check_option.getData()
+        check_key_object, check_value_object = check_option.getData()
         has_key_data = self._containsHelperOptionKey(check_key_object)
-        has_text_data = self._containsHelperTextData(check_text_data_obj)
+        has_text_data = self._containsHelperOptionValue(check_value_object)
         return has_key_data and has_text_data
 
     def _containsHelperOptionKey(self, check_key_object):
         checking_string = str(check_key_object)
         for option in self._options:
-            key_object, text_data_obj = option.getData()
+            key_object, value_object = option.getData()
             if (checking_string == str(key_object)):
                 return True
         return False
 
-    def _containsHelperTextData(self, check_text_data_obj):
-        checking_string = str(check_text_data_obj)
+    def _containsHelperOptionValue(self, check_value_object):
+        checking_string = str(check_value_object)
         for option in self._options:
-            key_object, text_data_obj = option.getData()
-            if (checking_string == str(text_data_obj)):
+            key_object, value_object = option.getData()
+            if (checking_string == str(value_object)):
                 return True
         return False
 
@@ -100,7 +100,7 @@ class OptionData:
     def __init__(self, key_string, text_string):
         try:
             self.key_object = OptionKey(key_string)
-            self.text_data_obj = TextData(text_string)
+            self.value_object = OptionValue(text_string)
         except ValueError as e:
             print(e)
             raise ValueError("Invalid Option Data")
@@ -108,20 +108,20 @@ class OptionData:
     def getOptionKey(self):
         return self.key_object
 
-    def getTextData(self):
-        return self.text_data_obj
+    def getOptionValue(self):
+        return self.value_object
 
     def getData(self):
-        return self.getOptionKey(), self.getTextData()
+        return self.getOptionKey(), self.getOptionValue()
 
     def __str__(self):
-        return str(self.key_object) + ") " + str(self.text_data_obj)
+        return str(self.key_object) + ") " + str(self.value_object)
 
-    def __eq__(self, option_data_obj):
-        if isinstance(option_data_obj, OptionData):
-            check_key_object, check_text_obj = option_data_obj.getData()
+    def __eq__(self, check_option_object):
+        if isinstance(check_option_object, OptionData):
+            check_key_object, check_value_object = check_option_object.getData()
             return ((self.key_object == check_key_object) and \
-                    (self.text_data_obj == check_text_obj))
+                    (self.value_object == check_value_object))
         return False
 
 
@@ -160,7 +160,7 @@ class OptionKey(DataContainer):
 
 
 
-class TextData(DataContainer):
+class OptionValue(DataContainer):
 
     def __init__(self, text_string):
         try:
@@ -186,6 +186,6 @@ class TextData(DataContainer):
         return self.text
 
     def __eq__(self, text_data_obj):
-        if isinstance(text_data_obj, TextData):
+        if isinstance(text_data_obj, OptionValue):
             return str(self) == str(text_data_obj)
         return False
