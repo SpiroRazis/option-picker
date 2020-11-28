@@ -9,11 +9,6 @@ CONDUCTS A SERIES OF SIMPLE TESTS
 
 testcase_obj = unittest.TestCase()
 
-test_options = testcase_obj.assertRaises(ValueError, OptionData, "selector test", "text")
-test_options = testcase_obj.assertRaises(ValueError, OptionData, "selector_test", "text")
-test_options = testcase_obj.assertRaises(ValueError, OptionData, "selectortest", "")
-
-test_options = testcase_obj.assertEqual(str(OptionData("selector", "text")), "selector) text")
 
 # SHOULD WORK:
 test1 = Query().setPrompt("beep boop")\
@@ -21,8 +16,58 @@ test1 = Query().setPrompt("beep boop")\
         .addOption("2", "LALA")\
         .addOption("x", "y")\
         .build()
-
 print(test1.query())
+
+# AUTO OPTION - SHOULD WORK
+test2 = Query().setPrompt("beep boop")\
+        .addOption("bar")\
+        .addOption("LALA")\
+        .addOption("y")\
+        .build()
+print(test2.query())
+
+# MIXED OPTION TYPES - STARTS WITH 1 ARG
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("beep boop")\
+        .addOption("bar")\
+        .addOption("LALA")\
+        .addOption("x", "y")\
+        .build()
+
+##################################################
+# MIXED OPTION TYPES - STARTS WITH 2 ARGS
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("beep boop")\
+        .addOption("foo", "bar")\
+        .addOption("LALA")\
+        .addOption("x", "y")\
+        .build()
+
+# INVALID TYPE - 1
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("beep boop")\
+        .addOption(2, "LALA")
+
+
+# INVALID TYPE - 2
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("beep boop")\
+        .addOption("2", 3)\
+        .build()
+
+# INVALID TYPE - 3
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("beep boop")\
+        .addOption(2, 3)\
+        .build()
+
+# INVALID TYPE - 4
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("beep boop")\
+        .addOption("foo", "bar", "spam")\
+        .build()
+
+##################################################
 
 # DUPLICATION
 with testcase_obj.assertRaises(ValueError):
@@ -32,7 +77,17 @@ with testcase_obj.assertRaises(ValueError):
         .addOption("x", "y")\
         .build()
 
-print("post duplication")
+# DUPLICATION WITH AUTO OPTION
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("beep boop")\
+        .addOption("bar")\
+        .addOption("bar")\
+        .addOption("y")\
+        .build()
+
+
+
+
 
 # REMAINING TESTS:
 
