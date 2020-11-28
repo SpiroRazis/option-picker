@@ -41,6 +41,8 @@ assert str(OptionData("selector", "text")) == "selector) text"
 new_list = OptionList()
 new_list.addOption(OptionData("foo", "bar"))
 new_list.addOption(OptionData("FOO", "BAR"))
+new_list.getOptionBySelector("FOO")
+
 
 with testcase_obj.assertRaises(ValueError):
     # DUPLICATE SELECTOR

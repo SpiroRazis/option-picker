@@ -2,6 +2,8 @@ import unittest
 from query import Query
 from query_components import OptionList, OptionData, SelectorData, TextData
 
+print(dir(OptionList))
+
 
 """
 CONDUCTS A SERIES OF SIMPLE TESTS

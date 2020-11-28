@@ -47,6 +47,13 @@ class OptionList(DataContainer):
             print(e)
             raise ValueError("Unable to Add Entry")
 
+    def getOptionBySelector(self, selector_string):
+        # print(selector_string)
+        for option in self._options:
+            if selector_string == option.getSelectorData().getData():
+                return option
+        raise KeyError("Selector Key Not Found.")
+
     def __len__(self):
         return len(self._options)
 
