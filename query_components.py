@@ -26,10 +26,10 @@ class OptionList(DataContainer):
 
     def isValidContent(self, content):
         if isinstance(content, OptionData):
-            check_selector_obj, check_text_obj = content.getData()
+            check_key_object, check_text_obj = content.getData()
             for option in self._options:
-                if (check_selector_obj == option.getSelectorData()):
-                    raise ValueError("Pre-Existing Selector: %s" % str(check_selector_obj))
+                if (check_key_object == option.getOptionKey()):
+                    raise ValueError("Pre-Existing Key: %s" % str(check_key_object))
                 elif (check_text_obj == option.getTextData()):
                     raise ValueError("Pre-Existing Text: %s" % str(check_text_obj))
             return True
@@ -47,12 +47,12 @@ class OptionList(DataContainer):
             print(e)
             raise ValueError("Unable to Add Entry")
 
-    def getOptionBySelector(self, selector_string):
-        # print(selector_string)
+    def getOptionByKey(self, key_string):
+        # print(key_string)
         for option in self._options:
-            if selector_string == option.getSelectorData().getData():
+            if key_string == option.getOptionKey().getData():
                 return option
-        raise KeyError("Selector Key Not Found.")
+        raise KeyError("Key Not Found.")
 
     def __len__(self):
         return len(self._options)
@@ -64,32 +64,32 @@ class OptionList(DataContainer):
     # SEARCH OPTION LIST FOR INPUT STRING
     def __contains__(self, object):
         if isinstance(object, OptionData):
-            # SEARCH OPTION LIST FOR BOTH SELECTOR AND TEXT
+            # SEARCH OPTION LIST FOR BOTH KEY AND TEXT
             return self._containsHelperOptionData(object)
-        elif isinstance(object, SelectorData):
-            return self._containsHelperSelectorData(object)
+        elif isinstance(object, OptionKey):
+            return self._containsHelperOptionKey(object)
         elif isinstance(object, TextData):
             return self._containsHelperTextData(object)
         return False
 
     def _containsHelperOptionData(self, check_option):
-        check_selector_data_obj, check_text_data_obj = check_option.getData()
-        has_selector_data = self._containsHelperSelectorData(check_selector_data_obj)
+        check_key_object, check_text_data_obj = check_option.getData()
+        has_key_data = self._containsHelperOptionKey(check_key_object)
         has_text_data = self._containsHelperTextData(check_text_data_obj)
-        return has_selector_data and has_text_data
+        return has_key_data and has_text_data
 
-    def _containsHelperSelectorData(self, check_selector_data_obj):
-        checking_string = str(check_selector_data_obj)
+    def _containsHelperOptionKey(self, check_key_object):
+        checking_string = str(check_key_object)
         for option in self._options:
-            selector_data_obj, text_data_obj = option.getData()
-            if (checking_string == str(selector_data_obj)):
+            key_object, text_data_obj = option.getData()
+            if (checking_string == str(key_object)):
                 return True
         return False
 
     def _containsHelperTextData(self, check_text_data_obj):
         checking_string = str(check_text_data_obj)
         for option in self._options:
-            selector_data_obj, text_data_obj = option.getData()
+            key_object, text_data_obj = option.getData()
             if (checking_string == str(text_data_obj)):
                 return True
         return False
@@ -97,43 +97,43 @@ class OptionList(DataContainer):
 
 class OptionData:
 
-    def __init__(self, selector_string, text_string):
+    def __init__(self, key_string, text_string):
         try:
-            self.selector_data_obj = SelectorData(selector_string)
+            self.key_object = OptionKey(key_string)
             self.text_data_obj = TextData(text_string)
         except ValueError as e:
             print(e)
             raise ValueError("Invalid Option Data")
 
-    def getSelectorData(self):
-        return self.selector_data_obj
+    def getOptionKey(self):
+        return self.key_object
 
     def getTextData(self):
         return self.text_data_obj
 
     def getData(self):
-        return self.getSelectorData(), self.getTextData()
+        return self.getOptionKey(), self.getTextData()
 
     def __str__(self):
-        return str(self.selector_data_obj) + ") " + str(self.text_data_obj)
+        return str(self.key_object) + ") " + str(self.text_data_obj)
 
     def __eq__(self, option_data_obj):
         if isinstance(option_data_obj, OptionData):
-            check_selector_obj, check_text_obj = option_data_obj.getData()
-            return ((self.selector_data_obj == check_selector_obj) and \
+            check_key_object, check_text_obj = option_data_obj.getData()
+            return ((self.key_object == check_key_object) and \
                     (self.text_data_obj == check_text_obj))
         return False
 
 
-class SelectorData(DataContainer):
+class OptionKey(DataContainer):
 
-    def __init__(self, selector_string):
+    def __init__(self, key_string):
         try:
-            if self.isValidContent(selector_string):
-                self.selector = selector_string
+            if self.isValidContent(key_string):
+                self.key_string = key_string
         except (ValueError, TypeError) as e:
             print(e)
-            raise ValueError("Invalid Selector Data")
+            raise ValueError("Invalid Key Data.")
 
     def getData(self):
         return str(self)
@@ -151,11 +151,11 @@ class SelectorData(DataContainer):
             raise TypeError("Not a String!")
 
     def __str__(self):
-        return self.selector
+        return self.key_string
 
-    def __eq__(self, selector_data_obj):
-        if isinstance(selector_data_obj, SelectorData):
-            return str(self) == str(selector_data_obj)
+    def __eq__(self, key_object):
+        if isinstance(key_object, OptionKey):
+            return str(self) == str(key_object)
         return False
 
 

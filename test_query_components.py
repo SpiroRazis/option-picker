@@ -1,5 +1,5 @@
 import unittest
-from query_components import OptionList, OptionData, SelectorData, TextData
+from query_components import OptionList, OptionData, OptionKey, TextData
 
 """
 CONDUCTS A SERIES OF SIMPLE TESTS
@@ -7,18 +7,18 @@ CONDUCTS A SERIES OF SIMPLE TESTS
 
 testcase_obj = unittest.TestCase()
 # WORK:
-test_selector = SelectorData("selectorTest")
-test_selector = SelectorData("SelectorTest12345")
-assert SelectorData("selectorTest").getData() == "selectorTest"
+test_key = OptionKey("keyTest")
+test_key = OptionKey("keyTest12345")
+assert OptionKey("keyTest").getData() == "keyTest"
 
 
 # DO NOT WORK (NON-ALPHA, NON-DIGIT CHARACTERS):
-test_selector = testcase_obj.assertRaises(ValueError, SelectorData, "selector test")
-test_selector = testcase_obj.assertRaises(ValueError, SelectorData, "selector_test")
-test_selector = testcase_obj.assertRaises(ValueError, SelectorData, "")
+test_key = testcase_obj.assertRaises(ValueError, OptionKey, "key test")
+test_key = testcase_obj.assertRaises(ValueError, OptionKey, "key_test")
+test_key = testcase_obj.assertRaises(ValueError, OptionKey, "")
 
-assert SelectorData("selectorTest") == SelectorData("selectorTest")
-assert not (SelectorData("selector1234") == SelectorData("selector4321"))
+assert OptionKey("keyTest") == OptionKey("keyTest")
+assert not (OptionKey("key1234") == OptionKey("key4321"))
 
 
 # GET TEXT TEST
@@ -29,11 +29,11 @@ assert not (TextData("x123") == TextData("123x"))
 
 test_text = testcase_obj.assertRaises(ValueError, TextData, "")
 
-# OPTIONS    test_options = testcase_obj.assertRaises(ValueError, Option, "selector test", "text")
-test_options = testcase_obj.assertRaises(ValueError, OptionData, "selector_test", "text")
-test_options = testcase_obj.assertRaises(ValueError, OptionData, "selectortest", "")
+# OPTIONS    test_options = testcase_obj.assertRaises(ValueError, Option, "key test", "text")
+test_options = testcase_obj.assertRaises(ValueError, OptionData, "key_test", "text")
+test_options = testcase_obj.assertRaises(ValueError, OptionData, "keytest", "")
 
-assert str(OptionData("selector", "text")) == "selector) text"
+assert str(OptionData("key", "text")) == "key) text"
 
 # OPTION LIST
 
@@ -41,11 +41,11 @@ assert str(OptionData("selector", "text")) == "selector) text"
 new_list = OptionList()
 new_list.addOption(OptionData("foo", "bar"))
 new_list.addOption(OptionData("FOO", "BAR"))
-new_list.getOptionBySelector("FOO")
+new_list.getOptionByKey("FOO")
 
 
 with testcase_obj.assertRaises(ValueError):
-    # DUPLICATE SELECTOR
+    # DUPLICATE KEY
     new_list = OptionList()
     new_list.addOption(OptionData("foo", "bar"))
     new_list.addOption(OptionData("foo", "lala"))
