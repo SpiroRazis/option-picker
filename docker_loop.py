@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 
+
 class DockerLoop:
 
     _RETURN_VALUE = "RETURN"
@@ -14,27 +15,19 @@ class DockerLoop:
     def __init__(self):
         self._client = None
         self._subprocess = None
+        self._user_query = None
+        self._eligible_func_dict = {}
         self._imageSearchHistory = []
 
     #def setup():
     #    self._connectClient()
 
-    def _connectClient(self):
+    def connectClient(self):
         self._client = docker.from_env()
-
-    def _hasImages(self):
-        return (len(self._client.images.list()) > 0)
-
-    def _hasContainers(self):
-        return (len(self._client.containers.list()) > 0)
 
     def disconnectClient(self):
         self._client.close()
         self._client = None
-
-    def checkAvailableOptions(self):
-        pass
-
 
     def looper(self):
         if self._client:
@@ -43,24 +36,69 @@ class DockerLoop:
             raise RuntimeError("Client not connected.")
         pass
 
+    def _hasImages(self):
+        return (len(self._client.images.list()) > 0)
+
+    def _hasContainers(self):
+        return (len(self._client.containers.list()) > 0)
 
 
-    def _ImageActions(self):
-        # EXISTING IMAGE ACTIONS
+    def _estabishAvailableOptions(self):
+        self._newQuery()
+        self._addImageOptions()
+        self._addContainerOptions()
+
+        self._user_query.build()
+
+
+
+    def _newQuery(self):
+        self._user_query = Query()
+        self._eligible_func_dict = {}
+
+    def _clearQuery(self):
+        self._user_query = None
+        self._eligible_func_dict = {}
+
+
+    def _updateQuery(self, func_option, func_reference):
+        self._user_query.addOption(func_option)
+        self._eligible_func_dict[func_option] = func_reference
+
+    def _executeQuery():
+        pass
+
+
+    def _addImageOptions(self):
         if self._hasImages():
-            pass
+            self._updateQuery("", self._____)
+
+        self._updateQuery("Search", self._dHubImageSearch())
+
+
         # OTHER IMAGES:
 
-        # SEARCH FOR IMAGE(S)
 
-        # RETURN
+        # EXISTING IMAGE ACTIONS
 
-        # _. BUILD?
-        # _. RUN?
-        # _. RM?
-        # _. RMI?
+        # SEARCH FOR IMAGE(S) IS ALWAYS AVAILABLE
+
+        # RETURN IS ALWAYS AVAILABLE - UNLESS EXIT
+
+        # _. BUILD? - IF DOCKERFILE AVAILABLE
+        # _. RUN? - IF IMAGE AVAILABLE
+        # _. RM? - REMOVE CONTAINER - REQUIRES CONTAINER
+        # _. RMI? - IF IMAGE AVAILABLE
 
         # SEARCH
+
+    def _addContainerOptions(self):
+        if self._hasContainers():
+            self._updateQuery("", self.___)
+
+
+
+    ################################################################
     '''
         SEARCH DOCKER HUB FOR AN IMAGE
     '''
@@ -81,6 +119,8 @@ class DockerLoop:
         self._imageSearchHistory.append({"time_stamp": dt.now(), \
                                         "search_term": search_term, \
                                         "response": response})
+
+    ################################################################
 
     def _selectClientImage(self):
         image_query = Query().setPrompt("Images:")
@@ -128,7 +168,9 @@ class DockerLoop:
 
 
 if __name__ == "__main__":
-    prompt_loop()
+    d_loop = DockerLoop()
+    d_loop.connectClient()
+    d_loop.disconnectClient()
 
     sys.exit(0)
 
