@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class DataContainer(ABC):
-
+    '''An abstract class currently limited to retrieval and validation.'''
     @abstractmethod
     def getData(self):
         pass
@@ -17,6 +17,7 @@ class DataContainer(ABC):
 
 
 class OptionList(DataContainer):
+    '''Currently a minimal wrapper to a list of OptionData objects.'''
 
     def __init__(self):
         self._options = []
@@ -96,7 +97,8 @@ class OptionList(DataContainer):
 
 
 class OptionData:
-
+    ''' Wrapper for Key-Value Pairs.'''
+    # TODO: May update to be concrete class that descends from DataContainer.
     def __init__(self, key_string, value_string):
         try:
             self.key_object = OptionKey(key_string)
@@ -126,7 +128,7 @@ class OptionData:
 
 
 class OptionKey(DataContainer):
-
+    ''' Wraps Key strings to follow requirements of OptionData objects.'''
     def __init__(self, key_string):
         try:
             if self.isValidContent(key_string):
@@ -161,14 +163,14 @@ class OptionKey(DataContainer):
 
 
 class OptionValue(DataContainer):
-
+    ''' Wraps Value strings to follow requirements of OptionData objects.'''
     def __init__(self, value_string):
         try:
             if self.isValidContent(value_string):
                 self.value = value_string
         except (ValueError, TypeError) as e:
             print(e)
-            raise ValueError("Invalid Value String")
+            raise ValueError("Invalid Value Data")
 
     def getData(self):
         return str(self)
