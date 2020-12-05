@@ -31,7 +31,7 @@ class OptionList(DataContainer):
                 if (check_key_object == option.getOptionKey()):
                     raise ValueError("Pre-Existing Key: %s" % str(check_key_object))
                 elif (check_value_object == option.getOptionValue()):
-                    raise ValueError("Pre-Existing Text: %s" % str(check_value_object))
+                    raise ValueError("Pre-Existing Value: %s" % str(check_value_object))
             return True
         else:
             raise TypeError("Not an Option!")
@@ -97,10 +97,10 @@ class OptionList(DataContainer):
 
 class OptionData:
 
-    def __init__(self, key_string, text_string):
+    def __init__(self, key_string, value_string):
         try:
             self.key_object = OptionKey(key_string)
-            self.value_object = OptionValue(text_string)
+            self.value_object = OptionValue(value_string)
         except ValueError as e:
             print(e)
             raise ValueError("Invalid Option Data")
@@ -162,13 +162,13 @@ class OptionKey(DataContainer):
 
 class OptionValue(DataContainer):
 
-    def __init__(self, text_string):
+    def __init__(self, value_string):
         try:
-            if self.isValidContent(text_string):
-                self.text = text_string
+            if self.isValidContent(value_string):
+                self.value = value_string
         except (ValueError, TypeError) as e:
             print(e)
-            raise ValueError("Invalid Text Data")
+            raise ValueError("Invalid Value String")
 
     def getData(self):
         return str(self)
@@ -178,12 +178,12 @@ class OptionValue(DataContainer):
             if content:
                 return True
             else:
-                raise ValueError("Empty Text Data")
+                raise ValueError("Empty Value String")
         else:
             raise TypeError("Not a String!")
 
     def __str__(self):
-        return self.text
+        return self.value
 
     def __eq__(self, text_data_obj):
         if isinstance(text_data_obj, OptionValue):
