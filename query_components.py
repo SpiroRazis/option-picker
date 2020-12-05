@@ -101,29 +101,29 @@ class OptionData:
     # TODO: May update to be concrete class that descends from DataContainer.
     def __init__(self, key_string, value_string):
         try:
-            self.key_object = OptionKey(key_string)
-            self.value_object = OptionValue(value_string)
+            self._key_object = OptionKey(key_string)
+            self._value_object = OptionValue(value_string)
         except ValueError as e:
             print(e)
             raise ValueError("Invalid Option Data")
 
     def getOptionKey(self):
-        return self.key_object
+        return self._key_object
 
     def getOptionValue(self):
-        return self.value_object
+        return self._value_object
 
     def getData(self):
         return self.getOptionKey(), self.getOptionValue()
 
     def __str__(self):
-        return str(self.key_object) + ") " + str(self.value_object)
+        return str(self._key_object) + ") " + str(self._value_object)
 
     def __eq__(self, check_option_object):
         if isinstance(check_option_object, OptionData):
             check_key_object, check_value_object = check_option_object.getData()
-            return ((self.key_object == check_key_object) and \
-                    (self.value_object == check_value_object))
+            return ((self._key_object == check_key_object) and \
+                    (self._value_object == check_value_object))
         return False
 
 
@@ -132,7 +132,7 @@ class OptionKey(DataContainer):
     def __init__(self, key_string):
         try:
             if self.isValidContent(key_string):
-                self.key_string = key_string
+                self._key_string = key_string
         except (ValueError, TypeError) as e:
             print(e)
             raise ValueError("Invalid Key Data.")
@@ -153,7 +153,7 @@ class OptionKey(DataContainer):
             raise TypeError("Not a String!")
 
     def __str__(self):
-        return self.key_string
+        return self._key_string
 
     def __eq__(self, key_object):
         if isinstance(key_object, OptionKey):
@@ -167,7 +167,7 @@ class OptionValue(DataContainer):
     def __init__(self, value_string):
         try:
             if self.isValidContent(value_string):
-                self.value = value_string
+                self._value_string = value_string
         except (ValueError, TypeError) as e:
             print(e)
             raise ValueError("Invalid Value Data")
@@ -185,7 +185,7 @@ class OptionValue(DataContainer):
             raise TypeError("Not a String!")
 
     def __str__(self):
-        return self.value
+        return self._value_string
 
     def __eq__(self, text_data_obj):
         if isinstance(text_data_obj, OptionValue):
