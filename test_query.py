@@ -28,6 +28,14 @@ test2 = Query().setPrompt("beep boop")\
         .build()
 print(test2.query())
 
+##################################################
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt("")
+    
+with testcase_obj.assertRaises(ValueError):
+    Query().setPrompt(1)
+
+##################################################
 # MIXED OPTION TYPES - STARTS WITH 1 ARG
 with testcase_obj.assertRaises(ValueError):
     Query().setPrompt("beep boop")\

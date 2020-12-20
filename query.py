@@ -1,4 +1,4 @@
-from query_components import OptionList, OptionData, OptionKey, OptionValue
+from query_components import OptionList, OptionData, OptionKey, OptionValue, PromptStatement
 import itertools as iter
 
 class Query:
@@ -35,14 +35,12 @@ class Query:
     def setPrompt(self, prompt):
         if self._is_built:
             raise ValueError("Already Built")
-        elif isinstance(prompt, str):
-            if prompt:
-                self._prompt = prompt
-                return self
-            else:
-                raise ValueError("Empty prompt provided.")
-        else:
-            raise TypeError("Not a String!")
+        try:
+            self._prompt = PromptStatement(prompt)
+            return self
+        except ValueError as e:
+            print(e)
+            raise
 
     # ADD ####################################################
     """

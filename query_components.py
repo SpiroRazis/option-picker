@@ -5,7 +5,7 @@ class DataContainer(ABC):
     '''An abstract class currently limited to retrieval and validation.'''
     @abstractmethod
     def getData(self):
-        pass
+        raise NotImplementedError
 
     #@abstractmethod
     #def setData(self, data):
@@ -13,7 +13,7 @@ class DataContainer(ABC):
 
     @abstractmethod
     def isValidContent(self, content):
-        pass
+        raise NotImplementedError
 
 
 class OptionList(DataContainer):
@@ -191,3 +191,29 @@ class OptionValue(DataContainer):
         if isinstance(text_data_obj, OptionValue):
             return str(self) == str(text_data_obj)
         return False
+
+
+class PromptStatement(DataContainer):
+    ''' Wraps Prompt strings to follow requirements of Query objects.'''
+    def __init__(self, prompt_string):
+        try:
+            if self.isValidContent(prompt_string):
+                self._prompt_string = prompt_string
+        except (ValueError, TypeError) as e:
+            print(e)
+            raise ValueError("Invalid Prompt Data")
+
+    def getData(self):
+        return str(self)
+
+    def isValidContent(self, content):
+        if isinstance(content, str):
+            if content:
+                return True
+            else:
+                raise ValueError("Empty Prompt String")
+        else:
+            raise TypeError("Not a String!")
+
+    def __str__(self):
+        return self._prompt_string
