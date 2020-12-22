@@ -1,57 +1,102 @@
+from abc import ABC, abstractmethod
+from query_components import OptionList, OptionData, OptionKey, OptionValue, PromptStatement
 
 
 
+class QueryNode(ABC):
 
-class NodeData:
-    '''Equivalent to a row in the Node Table'''
-    def __init__(self, option_text, option_condition, option_instruction, children):
+    def __init__(self):
+        self._reference = None
+        self._parent = None
+        # THIS OBJECT AS AN AGENT. MAYBE USE AN AGENT-NODE INTERFACE?
+        self._possible_objects = None
+        self._possible_verbs = None
+        self._children = None
+        self._eligibility = None
 
-        self.option_text = option_text
-        self.option_condition = option_condition
-        self.option_instruction = option_instruction
-        self.children = children
+        self._query = None
+        self._option_value = None
+        self._prompt = None
 
-class NodeBlock:
-    '''Does not require internal validity, but must be valid within table.'''
-    pass
+        self._max_selectable = None
 
-class NodeTable:
-    '''An append-only table'''
-    def isValidTable(self):
-        pass
+    ########################################
+    def setReference(self, reference):
+        self._reference = reference
 
-    def addNodeBlock(self, node_block):
-        pass
+    def getReference(self):
+        return self._reference
+    ########################################
+    def setParent(self, parent):
+        self._parent = parent
 
-    def _isValidNodeBlock(self, node_block):
-        pass
+    def getParent(self):
+        return self._parent
+    ########################################
+    def setPossibleObjects(self, possible_objects):
+        self._possible_objects = possible_objects
 
+    def getPossibleObjects(self):
+        return self._possible_objects
+    ########################################
+    def setPossibleVerbs(self, possible_verbs):
+        self._possible_verbs = possible_verbs
 
-############################################################
-
-# TODO: CHILDREN SHOULD BE AN OPTION LIST?
-
-class NodeOptionData(OptionData):
-
-    def __init__(self, key_string, parent, node_data):
-        try:
-            super(OptionData, self).__init__(key_string, node_data.option_text)
-        except ValueError as e:
-            print(e)
-            raise ValueError("Unable to instantiate base OptionData class.")
-
-        self._parent_node = parent
-
-        self._option_class = None
-        self._condition = node_data.option_condition
-        self._instruction = node_data.option_instruction
-        self._children = node_data.children
-
-    def getCondition(self):
-        return self._condition
-
-    def getInstruction(self):
-        return self._instruction
+    def getPossibleVerbs(self):
+        return self._possible_verbs
+    ########################################
+    def setChildren(self, children):
+        self._children = children
 
     def getChildren(self):
         return self._children
+    ########################################
+    def setOptionValue(self, option_value):
+        try:
+            self._option_value = OptionValue(option_value)
+        except ValueError as e:
+            print(e)
+            raise ValueError("Unable to set option value.")
+
+    def getOptionValue(self):
+        return self._option_value
+    ########################################
+    def setPrompt(self, prompt):
+        try:
+            self._prompt = PromptStatement(prompt)
+        except ValueError as e:
+            print(e)
+            raise ValueError("Unable to set prompt statement.")
+
+    def getPrompt(self):
+        return self._prompt
+    ########################################
+    def setMaxSelectable(self, max_selectable):
+        self._max_selectable = max_selectable
+
+    def getMaxSelectable(self):
+        return self._max_selectable
+    ########################################
+    @abstractmethod
+    def establishEligibility(self):
+        raise NotImplementedError
+
+    def getEligibility(self):
+        return self._eligibility
+    ########################################
+    @abstractmethod
+    def generateQuery(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def executeQuery(self):
+        raise NotImplementedError
+    ########################################
+    @abstractmethod
+    def executeMethod(self):
+        raise NotImplementedError
+    ########################################
+    @abstractmethod
+    def refresh(self):
+        # FORMERLY UPDATE
+        raise NotImplementedError
