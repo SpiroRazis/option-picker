@@ -42,7 +42,10 @@ test_text = testcase_obj.assertRaises(TypeError, OptionValue.isValidContent, 1)
 test_options = testcase_obj.assertRaises(ValueError, OptionData, "key_test", "text")
 test_options = testcase_obj.assertRaises(ValueError, OptionData, "keytest", "")
 
+
 assert str(OptionData("key", "text")) == "key) text"
+assert str(OptionData(OptionKey("key"), OptionValue("text"))) == "key) text"
+
 
 # OPTION LIST
 

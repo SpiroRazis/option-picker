@@ -99,13 +99,26 @@ class OptionList(DataContainer):
 class OptionData:
     ''' Wrapper for Key-Value Pairs.'''
     # TODO: May update to be concrete class that descends from DataContainer.
-    def __init__(self, key_string, value_string):
+    def __init__(self, key, value):
         try:
-            self._key_object = OptionKey(key_string)
-            self._value_object = OptionValue(value_string)
-        except ValueError as e:
+            if isinstance(key, str):
+                self._key_object = OptionKey(key)
+            elif isinstance(key, OptionKey):
+                self._key_object = key
+            else:
+                raise TypeError("Neither a string nor OptionKey!")
+
+            if isinstance(value, str):
+                self._value_object = OptionValue(value)
+            elif isinstance(value, OptionValue):
+                self._value_object = value
+            else:
+                raise TypeError("Neither a string nor OptionValue!")
+
+        except (ValueError, TypeError) as e:
             print(e)
             raise ValueError("Invalid Option Data")
+
 
     def getOptionKey(self):
         return self._key_object
