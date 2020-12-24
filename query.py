@@ -24,12 +24,12 @@ class Query:
         if self._is_built:
             try:
                 self._executeQuery()
-                return self._query_return
             except ValueError as e:
                 print(e)
                 raise ValueError("Unable to Query")
         else:
             raise ValueError("Not Built")
+        return self._query_return
 
     # SET ####################################################
     def setPrompt(self, prompt):
@@ -41,11 +41,11 @@ class Query:
             elif isinstance(prompt, PromptStatement):
                 self._prompt = prompt
             else:
-                raise TypeError("Invalid prompt type!")
-            return self
+                raise TypeError("Neither a string nor PromptStatement!")
         except (ValueError, TypeError) as e:
             print(e)
             raise ValueError("Unable to set prompt!")
+        return self
 
     # ADD ####################################################
     """
@@ -68,10 +68,10 @@ class Query:
                     key_string = str(next(self._key_generator))
                     print(key_string)
                 self._option_list.addOption(OptionData(key_string, value_string))
-                return self
             except (ValueError, TypeError) as e:
                 print(e)
                 raise ValueError("Unable to add the option!")
+        return self
 
     ##########################
     def _validateKeyUsage(self, key_type):
@@ -112,9 +112,9 @@ class Query:
         else:
             if self._prompt and (len(self._option_list) > 0):
                 self._is_built = True
-                return self
             else:
                 raise ValueError("Incomplete Query Build")
+        return self
 
     # QUERY ####################################################
     def _executeQuery(self):
