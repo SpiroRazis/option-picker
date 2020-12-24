@@ -36,11 +36,16 @@ class Query:
         if self._is_built:
             raise ValueError("Already Built")
         try:
-            self._prompt = PromptStatement(prompt)
+            if isinstance(prompt, str):
+                self._prompt = PromptStatement(prompt)
+            elif isinstance(prompt, PromptStatement):
+                self._prompt = prompt
+            else:
+                raise TypeError("Invalid prompt type!")
             return self
-        except ValueError as e:
+        except (ValueError, TypeError) as e:
             print(e)
-            raise
+            raise ValueError("Unable to set prompt!")
 
     # ADD ####################################################
     """

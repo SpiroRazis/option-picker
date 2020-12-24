@@ -1,6 +1,6 @@
 import unittest
 from query import Query
-from query_components import OptionList, OptionData, OptionKey, OptionValue
+from query_components import OptionList, OptionData, OptionKey, OptionValue, PromptStatement
 
 print(dir(OptionList))
 
@@ -22,6 +22,7 @@ print(test1.query())
 
 # AUTO OPTION - SHOULD WORK
 test2 = Query().setPrompt("beep boop")\
+        .setPrompt(PromptStatement("beep beep"))\
         .addOption("bar")\
         .addOption("LALA")\
         .addOption("y")\
@@ -31,7 +32,7 @@ print(test2.query())
 ##################################################
 with testcase_obj.assertRaises(ValueError):
     Query().setPrompt("")
-    
+
 with testcase_obj.assertRaises(ValueError):
     Query().setPrompt(1)
 
