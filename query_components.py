@@ -100,6 +100,7 @@ class OptionData:
     ''' Wrapper for Key-Value Pairs.'''
     # TODO: May update to be concrete class that descends from DataContainer.
     def __init__(self, key, value):
+        self._prompt = None
         try:
             if isinstance(key, str):
                 self._key_object = OptionKey(key)
@@ -119,7 +120,6 @@ class OptionData:
             print(e)
             raise ValueError("Invalid Option Data")
 
-
     def getOptionKey(self):
         return self._key_object
 
@@ -128,6 +128,22 @@ class OptionData:
 
     def getData(self):
         return self.getOptionKey(), self.getOptionValue()
+
+    def setPrompt(self, prompt):
+        try:
+            if isinstance(prompt, str):
+                self._prompt = PromptStatement(prompt)
+            elif isinstance(prompt, PromptStatement):
+                self._prompt = prompt
+            else:
+                raise TypeError("Neither a string nor PromptStatement!")
+        except (ValueError, TypeError) as e:
+            print(e)
+            raise ValueError("Unable to set prompt!")
+        return self
+
+    def getPrompt(self):
+        return self._prompt
 
     def __str__(self):
         return str(self._key_object) + ") " + str(self._value_object)

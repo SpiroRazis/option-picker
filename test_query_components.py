@@ -46,6 +46,7 @@ test_options = testcase_obj.assertRaises(ValueError, OptionData, "keytest", "")
 assert str(OptionData("key", "text")) == "key) text"
 assert str(OptionData(OptionKey("key"), OptionValue("text"))) == "key) text"
 
+assert OptionData("key", "text").setPrompt("test prompt").getPrompt().getData() == PromptStatement("test prompt").getData()
 
 # OPTION LIST
 
